@@ -275,7 +275,7 @@ export default function CruiseForm({ initialData = null, onSuccess = null }) {
               </label>
 
               <label>
-                Price ($):
+                Price (₱):
                 <input
                   type="number"
                   placeholder="499"

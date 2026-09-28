@@ -6,6 +6,7 @@ export default function UserTable() {
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
   const [editRole, setEditRole] = useState('customer');
+  const [editUsername, setEditUsername] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState('');
@@ -29,18 +30,20 @@ export default function UserTable() {
     return () => unsubscribe();
   }, []);
 
-  // Start Editing Role
+  // Start Editing User
   const handleEditClick = (user) => {
     setEditingUser(user);
     setEditRole(user.role || 'customer');
+    setEditUsername(user.username || '');
   };
 
   const handleCancelEdit = () => {
     setEditingUser(null);
     setEditRole('customer');
+    setEditUsername('');
   };
 
-  // Save Role Updates to Firestore
+  // Save Role and Username Updates to Firestore
   const handleSaveUpdate = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -51,12 +54,13 @@ export default function UserTable() {
         doc(db, 'users', editingUser.id),
         {
           role: editRole,
+          username: editUsername.trim(),
           updated_at: new Date().toISOString(),
         },
         { merge: true }
       );
 
-      setStatusMsg(`User ${editingUser.email} role updated to ${editRole}.`);
+      setStatusMsg(`User ${editingUser.email} updated successfully.`);
       setEditingUser(null);
     } catch (error) {
       console.error('Error updating user role:', error);
@@ -90,11 +94,22 @@ export default function UserTable() {
 
       {statusMsg && <p>{statusMsg}</p>}
 
-      {/* Edit Role Panel */}
+      {/* Edit User Panel */}
       {editingUser && (
         <fieldset>
-          <legend>Editing Role for: {editingUser.email}</legend>
+          <legend>Editing User: {editingUser.email}</legend>
           <form onSubmit={handleSaveUpdate}>
+            <div>
+              <label htmlFor="edit_username">Username</label>
+              <input
+                id="edit_username"
+                type="text"
+                value={editUsername}
+                onChange={(e) => setEditUsername(e.target.value)}
+                placeholder="Username"
+              />
+            </div>
+
             <div>
               <label htmlFor="edit_role">User Role</label>
               <select
@@ -108,7 +123,7 @@ export default function UserTable() {
             </div>
 
             <button type="submit" disabled={loading}>
-              {loading ? 'Saving...' : 'Update Role'}
+              {loading ? 'Saving...' : 'Update User'}
             </button>
             <button type="button" onClick={handleCancelEdit} disabled={loading}>
               Cancel
@@ -125,6 +140,7 @@ export default function UserTable() {
           <thead>
             <tr>
               <th>UID</th>
+              <th>Username</th>
               <th>Email</th>
               <th>Role</th>
               <th>Created At</th>
@@ -135,6 +151,7 @@ export default function UserTable() {
             {users.map((u) => (
               <tr key={u.id}>
                 <td>{u.id}</td>
+                <td>{u.username || '—'}</td>
                 <td>{u.email}</td>
                 <td>
                   <strong>{u.role || 'customer'}</strong>
@@ -146,7 +163,7 @@ export default function UserTable() {
                     onClick={() => handleEditClick(u)}
                     disabled={loading}
                   >
-                    Edit Role
+                    Edit
                   </button>
                   <button
                     type="button"

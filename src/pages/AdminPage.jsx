@@ -13,7 +13,6 @@ import UserTable from '../features/tables/UsersTable';
 import CruiseForm from '../features/forms/CruiseForm';
 import TagForm from '../features/forms/TagForm';
 import PromoForm from '../features/forms/PromoForm';
-import CreateUserForm from '../features/forms/CreateUserForm';
 
 export default function AdminPage() {
   // Active tab state: 'cruises' | 'tags' | 'promos' | 'bookings' | 'users'
@@ -23,7 +22,6 @@ export default function AdminPage() {
   const [showAddCruise, setShowAddCruise] = useState(false);
   const [showAddTag, setShowAddTag] = useState(false);
   const [showAddPromo, setShowAddPromo] = useState(false);
-  const [showAddUser, setShowAddUser] = useState(false);
 
   return (
     <div className="admin-page">
@@ -143,26 +141,7 @@ export default function AdminPage() {
           {activeTab === 'bookings' && <BookingTable />}
 
           {/* 5. USERS TAB */}
-          {activeTab === 'users' && (
-            <div>
-              <button
-                type="button"
-                onClick={() => setShowAddUser(!showAddUser)}
-                style={{ marginBottom: '15px' }}
-              >
-                {showAddUser ? 'Close Form' : '+ Create New User'}
-              </button>
-
-              {showAddUser && (
-                <fieldset style={{ marginBottom: '20px' }}>
-                  <legend>Create User (Admin Privileges)</legend>
-                  <AdminCreateUserForm />
-                </fieldset>
-              )}
-
-              <UserTable />
-            </div>
-          )}
+          {activeTab === 'users' && <UserTable />}
         </section>
       </main>
 
