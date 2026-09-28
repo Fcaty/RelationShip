@@ -4,7 +4,6 @@ import AdminPage from './pages/AdminPage'
 export default function App() {
   return (
     <main>
-      <AdminPage />
     </main>
   );
 }
