@@ -209,7 +209,7 @@ export default function BookingTable() {
                 <option value="">-- Select Tier --</option>
                 {getAvailableTiersForCruise(editFormData.cruise_id).map((t, idx) => (
                   <option key={idx} value={t.tier_name}>
-                    {t.tier_name} (${t.tier_price})
+                    {t.tier_name} (₱{t.tier_price})
                   </option>
                 ))}
               </select>
@@ -228,7 +228,7 @@ export default function BookingTable() {
             </div>
 
             <div>
-              <label htmlFor="edit_price_paid">Price Paid ($)</label>
+              <label htmlFor="edit_price_paid">Price Paid (₱)</label>
               <input
                 id="edit_price_paid"
                 type="number"

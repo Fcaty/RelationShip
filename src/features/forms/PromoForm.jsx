@@ -55,8 +55,16 @@ export default function PromoForm({ initialData = null, onSuccess = null }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setStatusMsg('');
+
+    if (promo.promo_date_start && promo.promo_date_end) {
+      if (promo.promo_date_end < promo.promo_date_start) {
+        setStatusMsg('Error: End date cannot be earlier than start date.');
+        return;
+      }
+    }
+
+    setLoading(true);
 
     try {
       let targetDocId = initialData?.id;
@@ -148,6 +156,7 @@ export default function PromoForm({ initialData = null, onSuccess = null }) {
             type="date"
             name="promo_date_start"
             value={promo.promo_date_start}
+            max={promo.promo_date_end || undefined}
             onChange={handleInputChange}
             required
           />
@@ -160,6 +169,7 @@ export default function PromoForm({ initialData = null, onSuccess = null }) {
             type="date"
             name="promo_date_end"
             value={promo.promo_date_end}
+            min={promo.promo_date_start || undefined}
             onChange={handleInputChange}
             required
           />
