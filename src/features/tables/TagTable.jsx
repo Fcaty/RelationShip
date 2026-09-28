@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { db } from '../../services/firebase'; // Adjust relative path as needed
-import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { db } from '../../services/firebase';
+import { collection, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
+import TagForm from '../forms/TagForm'; // Import the TagForm component
 
 export default function TagTable() {
   const [tags, setTags] = useState([]);
   const [editingTag, setEditingTag] = useState(null); // Holds the tag currently being edited
-  const [editName, setEditName] = useState('');
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState('');
 
@@ -31,42 +31,11 @@ export default function TagTable() {
   // Handle Edit button click
   const handleEditClick = (tag) => {
     setEditingTag(tag);
-    setEditName(tag.tag_name || tag.name || '');
   };
 
   // Cancel edit mode
   const handleCancelEdit = () => {
     setEditingTag(null);
-    setEditName('');
-  };
-
-  // Save updated tag to Firestore
-  const handleSaveUpdate = async (e) => {
-    e.preventDefault();
-    if (!editName.trim()) return;
-
-    setLoading(true);
-    setStatusMsg('');
-
-    try {
-      await setDoc(
-        doc(db, 'tags', editingTag.id),
-        {
-          tag_name: editName.trim(),
-          updated_at: new Date().toISOString(),
-        },
-        { merge: true }
-      );
-
-      setStatusMsg(`Tag ${editingTag.id} updated successfully.`);
-      setEditingTag(null);
-      setEditName('');
-    } catch (error) {
-      console.error('Error updating tag:', error);
-      setStatusMsg('Failed to update tag.');
-    } finally {
-      setLoading(false);
-    }
   };
 
   // Delete tag from Firestore
@@ -93,28 +62,20 @@ export default function TagTable() {
 
       {statusMsg && <p>{statusMsg}</p>}
 
-      {/* Edit Form Drawer / Fieldset */}
+      {/* Render TagForm counterpart when editing a row */}
       {editingTag && (
-        <fieldset>
-          <legend>Editing Tag: {editingTag.id}</legend>
-          <form onSubmit={handleSaveUpdate}>
-            <div>
-              <label htmlFor="edit_tag_name">Tag Name</label>
-              <input
-                id="edit_tag_name"
-                type="text"
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                required
-              />
-            </div>
-            <button type="submit" disabled={loading}>
-              {loading ? 'Saving...' : 'Update Tag'}
-            </button>
-            <button type="button" onClick={handleCancelEdit} disabled={loading}>
-              Cancel
-            </button>
-          </form>
+        <fieldset style={{ marginBottom: '20px' }}>
+          <legend>Edit Tag Counterpart</legend>
+          <TagForm
+            initialData={editingTag}
+            onSuccess={() => {
+              setEditingTag(null);
+              setStatusMsg(`Tag ${editingTag.id} updated successfully.`);
+            }}
+          />
+          <button type="button" onClick={handleCancelEdit} style={{ marginTop: '10px' }}>
+            Cancel Edit
+          </button>
         </fieldset>
       )}
 

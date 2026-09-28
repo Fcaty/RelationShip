@@ -1,18 +1,12 @@
 import { useState, useEffect } from 'react';
-import { db } from '../../services/firebase'; // Adjust relative path as needed
-import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { db } from '../../services/firebase';
+import { collection, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
+import PromoForm from '../forms/PromoForm'; // Import the PromoForm component
 
 export default function PromoTable() {
   const [promos, setPromos] = useState([]);
   const [availableTags, setAvailableTags] = useState([]);
   const [editingPromo, setEditingPromo] = useState(null);
-  const [editFormData, setEditFormData] = useState({
-    promo_name: '',
-    tag_id: '',
-    promo_date_start: '',
-    promo_date_end: '',
-    promo_price_decrease: '',
-  });
 
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState('');
@@ -55,64 +49,13 @@ export default function PromoTable() {
     return () => unsubscribeTags();
   }, []);
 
-  // Start Editing a Promo
+  // Start Editing: set selected promo object to pass into PromoForm
   const handleEditClick = (promo) => {
     setEditingPromo(promo);
-    setEditFormData({
-      promo_name: promo.promo_name || '',
-      tag_id: promo.tag_id || '',
-      promo_date_start: promo.promo_date_start || '',
-      promo_date_end: promo.promo_date_end || '',
-      promo_price_decrease: promo.promo_price_decrease || '',
-    });
   };
 
-  const handleCancelEdit = () => {
+  const handleCloseEdit = () => {
     setEditingPromo(null);
-    setEditFormData({
-      promo_name: '',
-      tag_id: '',
-      promo_date_start: '',
-      promo_date_end: '',
-      promo_price_decrease: '',
-    });
-  };
-
-  const handleInputChange = (e) => {
-    setEditFormData({
-      ...editFormData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  // Save Promo Updates to Firestore
-  const handleSaveUpdate = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setStatusMsg('');
-
-    try {
-      await setDoc(
-        doc(db, 'promos', editingPromo.id),
-        {
-          promo_name: editFormData.promo_name,
-          tag_id: editFormData.tag_id,
-          promo_date_start: editFormData.promo_date_start,
-          promo_date_end: editFormData.promo_date_end,
-          promo_price_decrease: Number(editFormData.promo_price_decrease),
-          updated_at: new Date().toISOString(),
-        },
-        { merge: true }
-      );
-
-      setStatusMsg(`Promo ${editingPromo.id} updated successfully.`);
-      setEditingPromo(null);
-    } catch (error) {
-      console.error('Error updating promo:', error);
-      setStatusMsg('Failed to update promo.');
-    } finally {
-      setLoading(false);
-    }
   };
 
   // Delete Promo
@@ -145,87 +88,20 @@ export default function PromoTable() {
 
       {statusMsg && <p>{statusMsg}</p>}
 
-      {/* Edit Form */}
+      {/* Render PromoForm counterpart when editing a row */}
       {editingPromo && (
-        <fieldset>
-          <legend>Editing Promo: {editingPromo.id}</legend>
-          <form onSubmit={handleSaveUpdate}>
-            <div>
-              <label htmlFor="edit_promo_name">Promo Name</label>
-              <input
-                id="edit_promo_name"
-                type="text"
-                name="promo_name"
-                value={editFormData.promo_name}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="edit_tag_id">Target Tag</label>
-              <select
-                id="edit_tag_id"
-                name="tag_id"
-                value={editFormData.tag_id}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">-- Select Tag --</option>
-                {availableTags.map((tag) => (
-                  <option key={tag.id} value={tag.id}>
-                    {tag.tag_name || tag.name} ({tag.id})
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="edit_promo_date_start">Start Date</label>
-              <input
-                id="edit_promo_date_start"
-                type="date"
-                name="promo_date_start"
-                value={editFormData.promo_date_start}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="edit_promo_date_end">End Date</label>
-              <input
-                id="edit_promo_date_end"
-                type="date"
-                name="promo_date_end"
-                value={editFormData.promo_date_end}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="edit_promo_price_decrease">Discount Rate (Decimal: e.g. 0.15)</label>
-              <input
-                id="edit_promo_price_decrease"
-                type="number"
-                name="promo_price_decrease"
-                value={editFormData.promo_price_decrease}
-                onChange={handleInputChange}
-                min="0"
-                max="1"
-                step="0.01"
-                required
-              />
-            </div>
-
-            <button type="submit" disabled={loading}>
-              {loading ? 'Saving...' : 'Update Promo'}
-            </button>
-            <button type="button" onClick={handleCancelEdit} disabled={loading}>
-              Cancel
-            </button>
-          </form>
+        <fieldset style={{ marginBottom: '20px' }}>
+          <legend>Edit Promo Counterpart</legend>
+          <PromoForm
+            initialData={editingPromo}
+            onSuccess={() => {
+              setEditingPromo(null);
+              setStatusMsg(`Promo ${editingPromo.id} updated successfully.`);
+            }}
+          />
+          <button type="button" onClick={handleCloseEdit} style={{ marginTop: '10px' }}>
+            Cancel Edit
+          </button>
         </fieldset>
       )}
 

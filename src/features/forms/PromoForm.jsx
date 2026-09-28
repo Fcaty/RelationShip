@@ -2,19 +2,35 @@ import { useState, useEffect } from 'react';
 import { db } from '../../services/firebase';
 import { collection, onSnapshot, doc, setDoc, getDocs } from 'firebase/firestore';
 
-export default function AddPromoForm() {
+export default function PromoForm({ initialData = null, onSuccess = null }) {
+  const isEditMode = Boolean(initialData);
+
   const [promo, setPromo] = useState({
-    promo_name: '',
-    tag_id: '',
-    promo_date_start: '',
-    promo_date_end: '',
-    promo_price_decrease: '',
+    promo_name: initialData?.promo_name || '',
+    tag_id: initialData?.tag_id || '',
+    promo_date_start: initialData?.promo_date_start || '',
+    promo_date_end: initialData?.promo_date_end || '',
+    promo_price_decrease: initialData?.promo_price_decrease ?? '',
   });
 
   const [availableTags, setAvailableTags] = useState([]);
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState('');
 
+  // Sync state if initialData changes (e.g. switching items to edit)
+  useEffect(() => {
+    if (initialData) {
+      setPromo({
+        promo_name: initialData.promo_name || '',
+        tag_id: initialData.tag_id || '',
+        promo_date_start: initialData.promo_date_start || '',
+        promo_date_end: initialData.promo_date_end || '',
+        promo_price_decrease: initialData.promo_price_decrease ?? '',
+      });
+    }
+  }, [initialData]);
+
+  // Real-time listener for tags dropdown options
   useEffect(() => {
     const unsubscribe = onSnapshot(
       collection(db, 'tags'),
@@ -43,31 +59,45 @@ export default function AddPromoForm() {
     setStatusMsg('');
 
     try {
-      const querySnapshot = await getDocs(collection(db, 'promos'));
-      const nextIndex = querySnapshot.size + 1;
-      const customId = `PROMO-${String(nextIndex).padStart(3, '0')}`;
+      let targetDocId = initialData?.id;
 
-      await setDoc(doc(db, 'promos', customId), {
-        promo_name: promo.promo_name,
-        tag_id: promo.tag_id,
-        promo_date_start: promo.promo_date_start,
-        promo_date_end: promo.promo_date_end,
-        promo_price_decrease: Number(promo.promo_price_decrease), // Stored as a decimal multiplier e.g. 0.15
-        created_at: new Date().toISOString(),
-      });
+      // Auto-generate custom ID if creating a new promo
+      if (!isEditMode) {
+        const querySnapshot = await getDocs(collection(db, 'promos'));
+        const nextIndex = querySnapshot.size + 1;
+        targetDocId = `PROMO-${String(nextIndex).padStart(3, '0')}`;
+      }
 
-      setStatusMsg(`Promo created! ID: ${customId}`);
+      await setDoc(
+        doc(db, 'promos', targetDocId),
+        {
+          promo_name: promo.promo_name,
+          tag_id: promo.tag_id,
+          promo_date_start: promo.promo_date_start,
+          promo_date_end: promo.promo_date_end,
+          promo_price_decrease: Number(promo.promo_price_decrease),
+          updated_at: new Date().toISOString(),
+          ...(isEditMode ? {} : { created_at: new Date().toISOString() }),
+        },
+        { merge: true }
+      );
 
-      setPromo({
-        promo_name: '',
-        tag_id: '',
-        promo_date_start: '',
-        promo_date_end: '',
-        promo_price_decrease: '',
-      });
+      setStatusMsg(`Promo ${isEditMode ? 'updated' : 'created'}! ID: ${targetDocId}`);
+
+      if (!isEditMode) {
+        setPromo({
+          promo_name: '',
+          tag_id: '',
+          promo_date_start: '',
+          promo_date_end: '',
+          promo_price_decrease: '',
+        });
+      }
+
+      if (onSuccess) onSuccess();
     } catch (error) {
-      console.error('Error adding promo:', error);
-      setStatusMsg('Failed to create promo.');
+      console.error('Error saving promo:', error);
+      setStatusMsg('Failed to save promo.');
     } finally {
       setLoading(false);
     }
@@ -75,7 +105,7 @@ export default function AddPromoForm() {
 
   return (
     <div>
-      <h2>Add New Promo</h2>
+      <h2>{isEditMode ? `Edit Promo (${initialData.id})` : 'Add New Promo'}</h2>
 
       {statusMsg && <p>{statusMsg}</p>}
 
@@ -152,7 +182,7 @@ export default function AddPromoForm() {
         </div>
 
         <button type="submit" disabled={loading}>
-          {loading ? 'Saving...' : 'Add Promo'}
+          {loading ? 'Saving...' : isEditMode ? 'Update Promo' : 'Add Promo'}
         </button>
       </form>
     </div>

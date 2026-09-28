@@ -3,7 +3,7 @@ import { db } from '../../services/firebase';
 import { collection, getDocs, doc, setDoc } from 'firebase/firestore';
 import { uploadImage } from '../../services/storage';
 
-export default function AddCruiseForm({ initialData = null, onSuccess = null }) {
+export default function CruiseForm({ initialData = null, onSuccess = null }) {
   const isEditMode = Boolean(initialData);
   
   const [cruise, setCruise] = useState({
