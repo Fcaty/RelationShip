@@ -89,10 +89,10 @@ export default function UserTable() {
   };
 
   return (
-    <div>
-      <h2>Manage Users</h2>
+    <section aria-labelledby="manage-users-heading">
+      <h2 id="manage-users-heading" className="text-n">Manage Users</h2>
 
-      {statusMsg && <p>{statusMsg}</p>}
+      {statusMsg && <p role="status" className="font-moderustic text-n">{statusMsg}</p>}
 
       {/* Edit User Panel */}
       {editingUser && (
@@ -122,10 +122,10 @@ export default function UserTable() {
               </select>
             </div>
 
-            <button type="submit" disabled={loading}>
+            <button type="submit" className="green" disabled={loading}>
               {loading ? 'Saving...' : 'Update User'}
             </button>
-            <button type="button" onClick={handleCancelEdit} disabled={loading}>
+            <button type="button" className="pink" onClick={handleCancelEdit} disabled={loading}>
               Cancel
             </button>
           </form>
@@ -136,30 +136,32 @@ export default function UserTable() {
       {users.length === 0 ? (
         <p>No users found in the database.</p>
       ) : (
-        <table border="1" cellPadding="8" cellSpacing="0">
-          <thead>
+        <table className="w-full border-collapse text-left font-moderustic text-n">
+          <caption className="sr-only">User records</caption>
+          <thead className="bg-n text-w">
             <tr>
-              <th>UID</th>
-              <th>Username</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Created At</th>
-              <th>Actions</th>
+              <th scope="col" className="px-3 py-2 text-left">UID</th>
+              <th scope="col" className="px-3 py-2 text-left">Username</th>
+              <th scope="col" className="px-3 py-2 text-left">Email</th>
+              <th scope="col" className="px-3 py-2 text-left">Role</th>
+              <th scope="col" className="px-3 py-2 text-left">Created At</th>
+              <th scope="col" className="px-3 py-2 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
             {users.map((u) => (
-              <tr key={u.id}>
-                <td>{u.id}</td>
-                <td>{u.username || '—'}</td>
-                <td>{u.email}</td>
-                <td>
+              <tr key={u.id} className="border-b border-b/30">
+                <td className="px-3 py-2">{u.id}</td>
+                <td className="px-3 py-2">{u.username || '—'}</td>
+                <td className="px-3 py-2">{u.email}</td>
+                <td className="px-3 py-2">
                   <strong>{u.role || 'customer'}</strong>
                 </td>
-                <td>{u.created_at ? new Date(u.created_at).toLocaleDateString() : 'N/A'}</td>
-                <td>
+                <td className="px-3 py-2">{u.created_at ? new Date(u.created_at).toLocaleDateString() : 'N/A'}</td>
+                <td className="space-x-2 px-3 py-2">
                   <button
                     type="button"
+                    className="blue"
                     onClick={() => handleEditClick(u)}
                     disabled={loading}
                   >
@@ -167,6 +169,7 @@ export default function UserTable() {
                   </button>
                   <button
                     type="button"
+                    className="pink"
                     onClick={() => handleDeleteClick(u)}
                     disabled={loading}
                   >
@@ -178,6 +181,6 @@ export default function UserTable() {
           </tbody>
         </table>
       )}
-    </div>
+    </section>
   );
 }

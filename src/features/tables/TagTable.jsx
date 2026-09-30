@@ -57,14 +57,14 @@ export default function TagTable() {
   };
 
   return (
-    <div>
-      <h2>Manage Tags</h2>
+    <section aria-labelledby="manage-tags-heading">
+      <h2 id="manage-tags-heading" className="text-n">Manage Tags</h2>
 
-      {statusMsg && <p>{statusMsg}</p>}
+      {statusMsg && <p role="status" className="font-moderustic text-n">{statusMsg}</p>}
 
       {/* Render TagForm counterpart when editing a row */}
       {editingTag && (
-        <fieldset style={{ marginBottom: '20px' }}>
+        <fieldset className="mb-5">
           <legend>Edit Tag Counterpart</legend>
           <TagForm
             initialData={editingTag}
@@ -73,7 +73,7 @@ export default function TagTable() {
               setStatusMsg(`Tag ${editingTag.id} updated successfully.`);
             }}
           />
-          <button type="button" onClick={handleCancelEdit} style={{ marginTop: '10px' }}>
+          <button type="button" className="pink mt-3" onClick={handleCancelEdit}>
             Cancel Edit
           </button>
         </fieldset>
@@ -82,22 +82,24 @@ export default function TagTable() {
       {tags.length === 0 ? (
         <p>No tags found in the database.</p>
       ) : (
-        <table border="1" cellPadding="8" cellSpacing="0">
-          <thead>
+        <table className="w-full border-collapse text-left font-moderustic text-n">
+          <caption className="sr-only">Tag inventory</caption>
+          <thead className="bg-n text-w">
             <tr>
-              <th>ID</th>
-              <th>Tag Name</th>
-              <th>Actions</th>
+              <th scope="col" className="px-3 py-2 text-left">ID</th>
+              <th scope="col" className="px-3 py-2 text-left">Tag Name</th>
+              <th scope="col" className="px-3 py-2 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
             {tags.map((tag) => (
-              <tr key={tag.id}>
-                <td>{tag.id}</td>
-                <td>{tag.tag_name || tag.name}</td>
-                <td>
+              <tr key={tag.id} className="border-b border-b/30">
+                <td className="px-3 py-2">{tag.id}</td>
+                <td className="px-3 py-2">{tag.tag_name || tag.name}</td>
+                <td className="space-x-2 px-3 py-2">
                   <button
                     type="button"
+                    className="blue"
                     onClick={() => handleEditClick(tag)}
                     disabled={loading}
                   >
@@ -105,6 +107,7 @@ export default function TagTable() {
                   </button>
                   <button
                     type="button"
+                    className="pink"
                     onClick={() => handleDeleteClick(tag.id)}
                     disabled={loading}
                   >
@@ -116,6 +119,6 @@ export default function TagTable() {
           </tbody>
         </table>
       )}
-    </div>
+    </section>
   );
 }

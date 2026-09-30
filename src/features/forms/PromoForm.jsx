@@ -113,9 +113,9 @@ export default function PromoForm({ initialData = null, onSuccess = null }) {
 
   return (
     <div>
-      <h2>{isEditMode ? `Edit Promo (${initialData.id})` : 'Add New Promo'}</h2>
+      <h2 className="text-n">{isEditMode ? `Edit Promo (${initialData.id})` : 'Add New Promo'}</h2>
 
-      {statusMsg && <p>{statusMsg}</p>}
+      {statusMsg && <p role="status" className="font-moderustic text-n">{statusMsg}</p>}
 
       <form onSubmit={handleSubmit}>
         <div>
@@ -191,7 +191,7 @@ export default function PromoForm({ initialData = null, onSuccess = null }) {
           />
         </div>
 
-        <button type="submit" disabled={loading}>
+        <button type="submit" className="green" disabled={loading}>
           {loading ? 'Saving...' : isEditMode ? 'Update Promo' : 'Add Promo'}
         </button>
       </form>

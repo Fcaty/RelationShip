@@ -11,7 +11,7 @@ export default function Footer() {
             className="mt-auto w-full self-stretch min-h-24 px-6 py-6 sm:px-12 bg-linear-to-r from-n from-30% to-g border-t-2 border-p flex flex-col justify-center items-start gap-5 overflow-hidden"
         >
             <div className="flex w-full flex-col gap-8 md:flex-row md:justify-between">
-                <section className="flex w-full max-w-md flex-col gap-5">
+                <div className="flex w-full max-w-md flex-col gap-5">
                     <Logo />
 
                     <div className="h-0 w-full border-t-2 border-b" />
@@ -32,7 +32,7 @@ export default function Footer() {
                             <span className="font-moderustic text-base">#50 Maestrang Kikay, Talavera<br />Nueva Ecija, Philippines 3114</span>
                         </div>
                     </address>
-                </section>
+                </div>
 
                 <section className="flex flex-1 flex-col items-start gap-2.5 md:items-end">
                     <h2 className="text-2xl font-semibold text-w">Quicklinks</h2>

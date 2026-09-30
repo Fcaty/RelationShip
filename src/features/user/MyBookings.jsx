@@ -31,32 +31,33 @@ export default function MyBookings() {
   const sorted = [...bookings].sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''));
 
   return (
-    <div>
-      <h2>My Bookings</h2>
+    <section aria-labelledby="my-bookings-heading">
+      <h2 id="my-bookings-heading" className="text-n">My Bookings</h2>
       {sorted.length === 0 && <p>You have no bookings yet.</p>}
       {sorted.length > 0 && (
-        <table>
-          <thead>
+        <table className="w-full border-collapse text-left font-moderustic text-n">
+          <caption className="sr-only">Your cruise bookings</caption>
+          <thead className="bg-n text-w">
             <tr>
-              <th>Cruise</th>
-              <th>Cabin Tier</th>
-              <th>Date</th>
-              <th>Price Paid</th>
-              <th>Status</th>
-              <th>Actions</th>
+              <th scope="col" className="px-3 py-2 text-left">Cruise</th>
+              <th scope="col" className="px-3 py-2 text-left">Cabin Tier</th>
+              <th scope="col" className="px-3 py-2 text-left">Date</th>
+              <th scope="col" className="px-3 py-2 text-left">Price Paid</th>
+              <th scope="col" className="px-3 py-2 text-left">Status</th>
+              <th scope="col" className="px-3 py-2 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
             {sorted.map((b) => (
-              <tr key={b.id}>
-                <td>{cruiseName(b.cruise_id)}</td>
-                <td>{b.tier_id}</td>
-                <td>{b.booking_date}</td>
-                <td>₱{b.price_paid}</td>
-                <td>{b.status === 'cancelled' ? 'Cancelled' : 'Confirmed'}</td>
-                <td>
+              <tr key={b.id} className="border-b border-b/30">
+                <td className="px-3 py-2">{cruiseName(b.cruise_id)}</td>
+                <td className="px-3 py-2">{b.tier_id}</td>
+                <td className="px-3 py-2">{b.booking_date}</td>
+                <td className="px-3 py-2">₱{b.price_paid}</td>
+                <td className="px-3 py-2">{b.status === 'cancelled' ? 'Cancelled' : 'Confirmed'}</td>
+                <td className="px-3 py-2">
                   {b.status !== 'cancelled' && (
-                    <button type="button" onClick={() => cancel(b)}>Cancel</button>
+                    <button type="button" className="pink" onClick={() => cancel(b)}>Cancel</button>
                   )}
                 </td>
               </tr>
@@ -64,6 +65,6 @@ export default function MyBookings() {
           </tbody>
         </table>
       )}
-    </div>
+    </section>
   );
 }

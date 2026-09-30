@@ -156,9 +156,9 @@ export default function CruiseForm({ initialData = null, onSuccess = null }) {
 
   return (
     <div>
-      <h3>{isEditMode ? `Edit Cruise (${initialData.id})` : 'Add New Cruise'}</h3>
+      <h2 className="text-n">{isEditMode ? `Edit Cruise (${initialData.id})` : 'Add New Cruise'}</h2>
 
-      {statusMsg && <p>{statusMsg}</p>}
+      {statusMsg && <p role="status" className="font-moderustic text-n">{statusMsg}</p>}
 
       <form onSubmit={handleSubmit}>
         <fieldset>
@@ -245,7 +245,7 @@ export default function CruiseForm({ initialData = null, onSuccess = null }) {
 
         <fieldset>
           <legend>3. Cabin Tiers & Pricing</legend>
-          <button type="button" onClick={addTierField}>
+          <button type="button" className="blue" onClick={addTierField}>
             + Add Tier Class
           </button>
 
@@ -300,7 +300,7 @@ export default function CruiseForm({ initialData = null, onSuccess = null }) {
               )}
 
               {tiers.length > 1 && (
-                <button type="button" onClick={() => removeTierField(index)}>
+                <button type="button" className="pink" onClick={() => removeTierField(index)}>
                   Remove
                 </button>
               )}
@@ -308,7 +308,7 @@ export default function CruiseForm({ initialData = null, onSuccess = null }) {
           ))}
         </fieldset>
 
-        <button type="submit" disabled={loading}>
+        <button type="submit" className="green" disabled={loading}>
           {loading ? 'Uploading & Saving...' : isEditMode ? 'Update Cruise' : 'Save Cruise'}
         </button>
       </form>

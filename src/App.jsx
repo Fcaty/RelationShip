@@ -2,15 +2,14 @@ import './App.css'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Footer from './components/Footer'
 import LandingPage from './pages/LandingPage'
-import UserPage from './pages/UserPage'
 import AdminPage from './pages/AdminPage'
 
 function AppRoutes() {
   const { currentUser, role } = useAuth()
 
-  if (!currentUser) return <LandingPage />
+  if (!currentUser) return <LandingPage isAuthenticated={false} />
   if (role === 'admin') return <AdminPage />
-  return <UserPage />
+  return <LandingPage isAuthenticated />
 }
 
 export default function App() {
