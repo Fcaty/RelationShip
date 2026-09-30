@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../services/firebase';
+import Header from '../components/Header';
 import AuthPanel from '../features/user/AuthPanel';
 import { lowestTierPrice } from '../lib/pricing';
 
@@ -15,6 +16,8 @@ export default function LandingPage() {
 
   return (
     <div>
+      <Header variant="guest" />
+
       <section style={{ borderBottom: '2px solid black' }}>
         <h1>Cruise Booking</h1>
         <p>Browse our cruises below. Sign in or register to book.</p>

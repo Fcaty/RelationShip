@@ -1,18 +1,15 @@
-export default function Header() {
-  return (
-    <header>
-      <div className="header-logo">
-        {/* Placeholder for Logo */}
-        <img src="" alt="Logo" />
-      </div>
+import Logo from './logo';
+import Navig from './navig';
 
-      <nav className="header-nav">
-        <button type="button">Home</button>
-        <button type="button">Find a Cruise</button>
-        <button type="button">About Us</button>
-        <button type="button">Admin Panel</button>
-        <button type="button">My Account</button>
-      </nav>
+export default function Header({ variant }) {
+  return (
+    <header
+      className="w-full h-24 min-h-24 px-7 py-3.5 bg-gradient-to-r from-[var(--color-n)] from-30% to-[var(--color-b)] border-b-2 border-[var(--color-p)] flex justify-between items-center overflow-hidden"
+    >
+      <div className="header-logo flex items-center">
+        <Logo />
+      </div>
+      <Navig variant={variant} />
     </header>
   );
 }

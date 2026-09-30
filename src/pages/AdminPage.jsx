@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import Header from '../components/Header';
-import Footer from '../components/Footer';
 
 // Import management tables
 import CruiseTable from '../features/tables/CruiseTable';
@@ -25,7 +24,7 @@ export default function AdminPage() {
 
   return (
     <div className="admin-page">
-      <Header />
+      <Header variant="logged-in" />
 
       <main className="admin-content">
         <h1>Admin Management Dashboard</h1>
@@ -145,7 +144,6 @@ export default function AdminPage() {
         </section>
       </main>
 
-      <Footer />
     </div>
   );
 }
