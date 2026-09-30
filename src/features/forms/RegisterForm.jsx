@@ -2,16 +2,16 @@ import { useState } from 'react';
 import { auth, db } from '../../services/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
+import FloatingMessagePopup from '../../components/FloatingMessagePopup';
 
-export default function RegisterForm({ onSuccess }) {
+export default function RegisterForm({ onSuccess, onLoadingChange }) {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     confirmPassword: '',
   });
 
-  const [loading, setLoading] = useState(false);
-  const [statusMsg, setStatusMsg] = useState('');
+  const [status, setStatus] = useState(null);
 
   const handleInputChange = (e) => {
     setFormData({
@@ -22,20 +22,20 @@ export default function RegisterForm({ onSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatusMsg('');
+    setStatus(null);
 
     // 1. Password validation
     if (formData.password !== formData.confirmPassword) {
-      setStatusMsg('Passwords do not match.');
+      setStatus({ type: 'error', message: 'Passwords do not match.' });
       return;
     }
 
     if (formData.password.length < 6) {
-      setStatusMsg('Password must be at least 6 characters.');
+      setStatus({ type: 'error', message: 'Password must be at least 6 characters.' });
       return;
     }
 
-    setLoading(true);
+    onLoadingChange?.(true);
 
     try {
       // 2. Create Auth user in Firebase Authentication
@@ -49,76 +49,74 @@ export default function RegisterForm({ onSuccess }) {
       // 3. Save profile to Firestore with hardcoded 'customer' role
       await setDoc(doc(db, 'users', user.uid), {
         email: user.email,
-        role: 'customer', // Default role for all public sign-ups
+        role: 'customer',
         created_at: new Date().toISOString(),
       });
 
-      setStatusMsg('Account created successfully!');
+      setStatus({ type: 'success', message: 'Account created successfully!' });
       setFormData({ email: '', password: '', confirmPassword: '' });
 
       if (onSuccess) onSuccess();
     } catch (error) {
       console.error('Registration error:', error);
       if (error.code === 'auth/email-already-in-use') {
-        setStatusMsg('This email is already registered.');
+        setStatus({ type: 'error', message: 'This email is already registered.' });
       } else {
-        setStatusMsg('Failed to register: ' + error.message);
+        setStatus({ type: 'error', message: 'Failed to register: ' + error.message });
       }
     } finally {
-      setLoading(false);
+      onLoadingChange?.(false);
     }
   };
 
   return (
-    <div>
-      <h2>Create Account</h2>
+    <form id="auth-register-form" className="self-stretch py-5 flex flex-col justify-start items-center gap-2.5" onSubmit={handleSubmit} noValidate>
+      <h2 id="register-title" className="self-stretch text-center text-w text-3xl font-semibold font-moderustic">Sign Up</h2>
 
-      {statusMsg && <p>{statusMsg}</p>}
+      {status && (
+        <FloatingMessagePopup
+          title={status.type === 'error' ? 'Registration Error' : 'Registration Successful'}
+          message={status.message}
+          type={status.type}
+          onClose={() => setStatus(null)}
+        />
+      )}
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="reg_email">Email Address</label>
-          <input
-            id="reg_email"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            placeholder="user@example.com"
-            required
-          />
-        </div>
+      <label htmlFor="reg_email" className="w-full">
+        <input
+          id="reg_email"
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleInputChange}
+          placeholder="Email Address"
+          required
+        />
+      </label>
 
-        <div>
-          <label htmlFor="reg_password">Password</label>
-          <input
-            id="reg_password"
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            placeholder="••••••••"
-            required
-          />
-        </div>
+      <label htmlFor="reg_password" className="w-full">
+        <input
+          id="reg_password"
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleInputChange}
+          placeholder="Password"
+          required
+        />
+      </label>
 
-        <div>
-          <label htmlFor="reg_confirm_password">Confirm Password</label>
-          <input
-            id="reg_confirm_password"
-            type="password"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleInputChange}
-            placeholder="••••••••"
-            required
-          />
-        </div>
-
-        <button type="submit" disabled={loading}>
-          {loading ? 'Creating Account...' : 'Register'}
-        </button>
-      </form>
-    </div>
+      <label htmlFor="reg_confirm_password" className="w-full">
+        <input
+          id="reg_confirm_password"
+          type="password"
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={handleInputChange}
+          placeholder="Confirm Password"
+          required
+        />
+      </label>
+    </form>
   );
 }

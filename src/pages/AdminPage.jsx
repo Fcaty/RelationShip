@@ -30,59 +30,74 @@ export default function AdminPage() {
         <h1>Admin Management Dashboard</h1>
 
         {/* Tab Navigation Bar (5 Buttons) */}
-        <nav className="admin-tab-bar" style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
+        <div className="admin-tab-bar mb-5 flex flex-wrap gap-2" role="group" aria-label="Management sections">
           <button
             type="button"
+            id="tab-cruises"
+            aria-controls="admin-view-panel"
+            aria-pressed={activeTab === 'cruises'}
+            className={`blue ${activeTab === 'cruises' ? '' : 'opacity-70'}`}
             onClick={() => setActiveTab('cruises')}
-            style={{ fontWeight: activeTab === 'cruises' ? 'bold' : 'normal' }}
           >
             Cruises
           </button>
           <button
             type="button"
+            id="tab-tags"
+            aria-controls="admin-view-panel"
+            aria-pressed={activeTab === 'tags'}
+            className={`blue ${activeTab === 'tags' ? '' : 'opacity-70'}`}
             onClick={() => setActiveTab('tags')}
-            style={{ fontWeight: activeTab === 'tags' ? 'bold' : 'normal' }}
           >
             Tags
           </button>
           <button
             type="button"
+            id="tab-promos"
+            aria-controls="admin-view-panel"
+            aria-pressed={activeTab === 'promos'}
+            className={`blue ${activeTab === 'promos' ? '' : 'opacity-70'}`}
             onClick={() => setActiveTab('promos')}
-            style={{ fontWeight: activeTab === 'promos' ? 'bold' : 'normal' }}
           >
             Promos
           </button>
           <button
             type="button"
+            id="tab-bookings"
+            aria-controls="admin-view-panel"
+            aria-pressed={activeTab === 'bookings'}
+            className={`blue ${activeTab === 'bookings' ? '' : 'opacity-70'}`}
             onClick={() => setActiveTab('bookings')}
-            style={{ fontWeight: activeTab === 'bookings' ? 'bold' : 'normal' }}
           >
             Bookings
           </button>
           <button
             type="button"
+            id="tab-users"
+            aria-controls="admin-view-panel"
+            aria-pressed={activeTab === 'users'}
+            className={`blue ${activeTab === 'users' ? '' : 'opacity-70'}`}
             onClick={() => setActiveTab('users')}
-            style={{ fontWeight: activeTab === 'users' ? 'bold' : 'normal' }}
           >
             Users
           </button>
-        </nav>
+        </div>
 
         {/* Tab Views */}
-        <section className="admin-view-panel">
+        <section id="admin-view-panel" className="admin-view-panel" aria-labelledby={`tab-${activeTab}`}>
           {/* 1. CRUISES TAB */}
           {activeTab === 'cruises' && (
             <div>
               <button
                 type="button"
                 onClick={() => setShowAddCruise(!showAddCruise)}
-                style={{ marginBottom: '15px' }}
+                className={`mb-4 ${showAddCruise ? 'pink' : 'blue'}`}
               >
                 {showAddCruise ? 'Close Form' : '+ Add New Cruise'}
               </button>
 
               {showAddCruise && (
-                <fieldset style={{ marginBottom: '20px' }}>
+                <fieldset className="mb-5">
                   <legend>Create New Cruise</legend>
                   <CruiseForm onSuccess={() => setShowAddCruise(false)} />
                 </fieldset>
@@ -98,13 +113,13 @@ export default function AdminPage() {
               <button
                 type="button"
                 onClick={() => setShowAddTag(!showAddTag)}
-                style={{ marginBottom: '15px' }}
+                className={`mb-4 ${showAddTag ? 'pink' : 'blue'}`}
               >
                 {showAddTag ? 'Close Form' : '+ Add New Tag'}
               </button>
 
               {showAddTag && (
-                <fieldset style={{ marginBottom: '20px' }}>
+                <fieldset className="mb-5">
                   <legend>Create New Tag</legend>
                   <TagForm onSuccess={() => setShowAddTag(false)} />
                 </fieldset>
@@ -120,13 +135,13 @@ export default function AdminPage() {
               <button
                 type="button"
                 onClick={() => setShowAddPromo(!showAddPromo)}
-                style={{ marginBottom: '15px' }}
+                className={`mb-4 ${showAddPromo ? 'pink' : 'blue'}`}
               >
                 {showAddPromo ? 'Close Form' : '+ Add New Promo'}
               </button>
 
               {showAddPromo && (
-                <fieldset style={{ marginBottom: '20px' }}>
+                <fieldset className="mb-5">
                   <legend>Create New Promo</legend>
                   <PromoForm onSuccess={() => setShowAddPromo(false)} />
                 </fieldset>

@@ -92,12 +92,12 @@ export default function BookingForm({ cruise, promo, onClose }) {
             {promo && ` (${promo.promo_name} applied)`}
           </p>
         )}
-        {msg && <p>{msg}</p>}
+        {msg && <p role="alert" className="font-moderustic text-p">{msg}</p>}
 
-        <button type="submit" disabled={busy || !tier || !date || slotsLeft < 1}>
+        <button type="submit" className="green" disabled={busy || !tier || !date || slotsLeft < 1}>
           {busy ? 'Booking...' : 'Confirm Booking'}
         </button>
-        <button type="button" onClick={() => onClose(false)}>Cancel</button>
+        <button type="button" className="pink" onClick={() => onClose(false)}>Cancel</button>
       </fieldset>
     </form>
   );

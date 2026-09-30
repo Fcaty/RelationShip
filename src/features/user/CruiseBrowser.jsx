@@ -39,9 +39,9 @@ export default function CruiseBrowser() {
     );
 
   return (
-    <div>
-      <h2>Browse Cruises</h2>
-      {toast && <p>{toast}</p>}
+    <section aria-labelledby="browse-cruises-heading">
+      <h2 id="browse-cruises-heading" className="text-n">Browse Cruises</h2>
+      {toast && <p role="status" className="font-moderustic text-g">{toast}</p>}
 
       <fieldset>
         <legend>Filters</legend>
@@ -86,30 +86,29 @@ export default function CruiseBrowser() {
         const low = lowestTierPrice(cruise);
         const hasPrice = Number.isFinite(low);
         return (
-          <fieldset key={cruise.id}>
-            <legend>{cruise.cruise_name}</legend>
+          <article key={cruise.id} className="space-y-3 border-b border-b/30 py-5">
+            <h3 className="text-n">{cruise.cruise_name}</h3>
             {cruise.cruise_image_url && (
-              <img src={cruise.cruise_image_url} alt={cruise.cruise_name} width="200" />
+              <img src={cruise.cruise_image_url} alt={cruise.cruise_name} className="h-48 w-full max-w-sm object-cover" />
             )}
-            <div>Destination: {cruise.cruise_destination}</div>
-            <div>Departure Port: {cruise.cruise_port}</div>
-            <div>{cruise.cruise_description}</div>
-            <div>
-              Tags:{' '}
-              {(cruise.tag_ids || [])
-                .map((id) => tags.find((t) => t.id === id))
+            <dl className="grid gap-2 font-moderustic sm:grid-cols-2">
+              <div><dt className="font-semibold">Destination</dt><dd>{cruise.cruise_destination}</dd></div>
+              <div><dt className="font-semibold">Departure Port</dt><dd>{cruise.cruise_port}</dd></div>
+              {cruise.cruise_description && <div className="sm:col-span-2"><dt className="font-semibold">About</dt><dd>{cruise.cruise_description}</dd></div>}
+              <div><dt className="font-semibold">Tags</dt><dd>{(cruise.tag_ids || [])
+                .map((id) => tags.find((tag) => tag.id === id))
                 .filter(Boolean)
-                .map((t) => t.tag_name || t.name)
-                .join(', ')}
-            </div>
-            {promo && <div>Promo: {promo.promo_name}</div>}
-            <div>
+                .map((tag) => tag.tag_name || tag.name)
+                .join(', ') || 'None'}</dd></div>
+              {promo && <div><dt className="font-semibold">Promo</dt><dd>{promo.promo_name}</dd></div>}
+            </dl>
+            <p className="font-moderustic">
               From {promo && hasPrice && <s>₱{low}</s>} ₱{hasPrice ? discountedPrice(low, promo) : '—'}
-            </div>
-            <button type="button" onClick={() => setBooking({ cruise, promo })}>Book</button>
-          </fieldset>
+            </p>
+            <button type="button" className="green" onClick={() => setBooking({ cruise, promo })}>Book</button>
+          </article>
         );
       })}
-    </div>
+    </section>
   );
 }

@@ -156,10 +156,10 @@ export default function BookingTable() {
   };
 
   return (
-    <div>
-      <h2>Manage Bookings</h2>
+    <section aria-labelledby="manage-bookings-heading">
+      <h2 id="manage-bookings-heading" className="text-n">Manage Bookings</h2>
 
-      {statusMsg && <p>{statusMsg}</p>}
+      {statusMsg && <p role="status" className="font-moderustic text-n">{statusMsg}</p>}
 
       {/* Edit Form Drawer */}
       {editingBooking && (
@@ -241,10 +241,10 @@ export default function BookingTable() {
               />
             </div>
 
-            <button type="submit" disabled={loading}>
+            <button type="submit" className="green" disabled={loading}>
               {loading ? 'Saving...' : 'Update Booking'}
             </button>
-            <button type="button" onClick={handleCancelEdit} disabled={loading}>
+            <button type="button" className="pink" onClick={handleCancelEdit} disabled={loading}>
               Cancel
             </button>
           </form>
@@ -255,30 +255,32 @@ export default function BookingTable() {
       {bookings.length === 0 ? (
         <p>No bookings found in the database.</p>
       ) : (
-        <table border="1" cellPadding="8" cellSpacing="0">
-          <thead>
+        <table className="w-full border-collapse text-left font-moderustic text-n">
+          <caption className="sr-only">Booking records</caption>
+          <thead className="bg-n text-w">
             <tr>
-              <th>ID</th>
-              <th>User ID</th>
-              <th>Cruise</th>
-              <th>Tier</th>
-              <th>Booking Date</th>
-              <th>Price Paid</th>
-              <th>Actions</th>
+              <th scope="col" className="px-3 py-2 text-left">ID</th>
+              <th scope="col" className="px-3 py-2 text-left">User ID</th>
+              <th scope="col" className="px-3 py-2 text-left">Cruise</th>
+              <th scope="col" className="px-3 py-2 text-left">Tier</th>
+              <th scope="col" className="px-3 py-2 text-left">Booking Date</th>
+              <th scope="col" className="px-3 py-2 text-left">Price Paid</th>
+              <th scope="col" className="px-3 py-2 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
             {bookings.map((b) => (
-              <tr key={b.id}>
-                <td>{b.id}</td>
-                <td>{b.user_id}</td>
-                <td>{getCruiseName(b.cruise_id)} ({b.cruise_id})</td>
-                <td>{b.tier_id}</td>
-                <td>{b.booking_date}</td>
-                <td>${Number(b.price_paid || 0).toFixed(2)}</td>
-                <td>
+              <tr key={b.id} className="border-b border-b/30">
+                <td className="px-3 py-2">{b.id}</td>
+                <td className="px-3 py-2">{b.user_id}</td>
+                <td className="px-3 py-2">{getCruiseName(b.cruise_id)} ({b.cruise_id})</td>
+                <td className="px-3 py-2">{b.tier_id}</td>
+                <td className="px-3 py-2">{b.booking_date}</td>
+                <td className="px-3 py-2">${Number(b.price_paid || 0).toFixed(2)}</td>
+                <td className="space-x-2 px-3 py-2">
                   <button
                     type="button"
+                    className="blue"
                     onClick={() => handleEditClick(b)}
                     disabled={loading}
                   >
@@ -286,6 +288,7 @@ export default function BookingTable() {
                   </button>
                   <button
                     type="button"
+                    className="pink"
                     onClick={() => handleDeleteClick(b.id)}
                     disabled={loading}
                   >
@@ -297,6 +300,6 @@ export default function BookingTable() {
           </tbody>
         </table>
       )}
-    </div>
+    </section>
   );
 }

@@ -10,6 +10,12 @@
     --color-g: #06A77D;
     --color-b: #197BBD;
     --color-n: #0A2463;
+    --radius-auth-cut: 5px;
+}
+
+body {
+    color: var(--color-n);
+    font-family: var(--font-moderustic);
 }
 
 h1 {
@@ -31,14 +37,65 @@ h3 {
 
 h4  {
     font-weight: var(--font-weight-medium);
-    font-size: var(--xl);
+    font-size: var(--text-xl);
     font-family: var(--font-moderustic);
 }
 
 p {
     font-weight: var(--font-weight-normal);
-    font-size: var(text-base);
+    font-size: var(--text-base);
     font-family: var(--font-moderustic);
+}
+
+input {
+    width: 100%;
+    border: 0;
+    border-radius: var(--radius-auth-cut) var(--radius-3xl) var(--radius-3xl) var(--radius-auth-cut);
+    outline: 2px solid color-mix(in srgb, var(--color-b) 50%, transparent);
+    outline-offset: -2px;
+    background-color: var(--color-w);
+    color: var(--color-n);
+    font-family: var(--font-moderustic);
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-medium);
+    padding: 0.3125rem 0.875rem;
+}
+
+input::placeholder {
+    color: color-mix(in srgb, var(--color-n) 80%, transparent);
+    opacity: 1;
+}
+
+select,
+textarea {
+    border: 1px solid color-mix(in srgb, var(--color-b) 50%, transparent);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-w);
+    color: var(--color-n);
+    font-family: var(--font-moderustic);
+    padding: 0.5rem 0.75rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--color-n);
+    font-family: var(--font-moderustic);
+}
+
+thead {
+    background-color: var(--color-n);
+    color: var(--color-w);
+}
+
+th,
+td {
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+}
+
+tbody tr {
+    border-bottom: 1px solid color-mix(in srgb, var(--color-b) 30%, transparent);
 }
 
 button {
@@ -52,7 +109,7 @@ button {
     outline: 2px solid currentColor;
     outline-offset: -2px;
     font-family: var(--font-moderustic);
-    font-size: var(--text-md);
+    font-size: var(--text-base);
     font-weight: var(--font-weight-medium);
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;

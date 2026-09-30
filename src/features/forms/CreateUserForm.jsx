@@ -69,7 +69,7 @@ export default function AdminCreateUserForm() {
   return (
     <fieldset>
       <legend>Add New User (Admin)</legend>
-      {statusMsg && <p>{statusMsg}</p>}
+      {statusMsg && <p role="status" className="font-moderustic text-n">{statusMsg}</p>}
       <form onSubmit={handleAdminCreateUser}>
         <div>
           <label htmlFor="admin_user_email">Email</label>
@@ -108,7 +108,7 @@ export default function AdminCreateUserForm() {
           </select>
         </div>
 
-        <button type="submit" disabled={loading}>
+        <button type="submit" className="green" disabled={loading}>
           {loading ? 'Creating...' : 'Create User'}
         </button>
       </form>

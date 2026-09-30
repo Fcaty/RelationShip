@@ -47,16 +47,16 @@ export default function CruiseTable() {
   };
 
   return (
-    <div>
-      <h2>Manage Cruises</h2>
+    <section aria-labelledby="manage-cruises-heading">
+      <h2 id="manage-cruises-heading" className="text-n">Manage Cruises</h2>
 
-      {statusMsg && <p>{statusMsg}</p>}
+      {statusMsg && <p role="status" className="font-moderustic text-n">{statusMsg}</p>}
 
       {/* Reused Cruise Form in Edit Mode */}
       {editingCruise && (
         <fieldset>
           <legend>Editing Cruise: {editingCruise.id}</legend>
-          <button type="button" onClick={() => setEditingCruise(null)}>
+          <button type="button" className="pink" onClick={() => setEditingCruise(null)}>
             Close Edit Form
           </button>
           
@@ -70,27 +70,28 @@ export default function CruiseTable() {
       {cruises.length === 0 ? (
         <p>No cruises found in the database.</p>
       ) : (
-        <table border="1" cellPadding="8" cellSpacing="0">
-          <thead>
+        <table className="w-full border-collapse text-left font-moderustic text-n">
+          <caption className="sr-only">Cruise inventory</caption>
+          <thead className="bg-n text-w">
             <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Destination</th>
-              <th>Departure Port</th>
-              <th>Description</th>
-              <th>Tiers</th>
-              <th>Actions</th>
+              <th scope="col" className="px-3 py-2 text-left">ID</th>
+              <th scope="col" className="px-3 py-2 text-left">Name</th>
+              <th scope="col" className="px-3 py-2 text-left">Destination</th>
+              <th scope="col" className="px-3 py-2 text-left">Departure Port</th>
+              <th scope="col" className="px-3 py-2 text-left">Description</th>
+              <th scope="col" className="px-3 py-2 text-left">Tiers</th>
+              <th scope="col" className="px-3 py-2 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
             {cruises.map((cruise) => (
-              <tr key={cruise.id}>
-                <td>{cruise.id}</td>
-                <td>{cruise.cruise_name}</td>
-                <td>{cruise.cruise_destination}</td>
-                <td>{cruise.cruise_port}</td>
-                <td>{cruise.cruise_description}</td>
-                <td>
+              <tr key={cruise.id} className="border-b border-b/30">
+                <td className="px-3 py-2">{cruise.id}</td>
+                <td className="px-3 py-2">{cruise.cruise_name}</td>
+                <td className="px-3 py-2">{cruise.cruise_destination}</td>
+                <td className="px-3 py-2">{cruise.cruise_port}</td>
+                <td className="px-3 py-2">{cruise.cruise_description}</td>
+                <td className="px-3 py-2">
                   {cruise.tiers && cruise.tiers.length > 0 ? (
                     <ul>
                       {cruise.tiers.map((tier, idx) => (
@@ -103,9 +104,10 @@ export default function CruiseTable() {
                     'None'
                   )}
                 </td>
-                <td>
+                <td className="space-x-2 px-3 py-2">
                   <button
                     type="button"
+                    className="blue"
                     onClick={() => setEditingCruise(cruise)}
                     disabled={loading}
                   >
@@ -113,6 +115,7 @@ export default function CruiseTable() {
                   </button>
                   <button
                     type="button"
+                    className="pink"
                     onClick={() => handleDeleteClick(cruise.id)}
                     disabled={loading}
                   >
@@ -124,6 +127,6 @@ export default function CruiseTable() {
           </tbody>
         </table>
       )}
-    </div>
+    </section>
   );
 }

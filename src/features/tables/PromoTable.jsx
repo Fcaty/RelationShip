@@ -83,14 +83,14 @@ export default function PromoTable() {
   };
 
   return (
-    <div>
-      <h2>Manage Promos</h2>
+    <section aria-labelledby="manage-promos-heading">
+      <h2 id="manage-promos-heading" className="text-n">Manage Promos</h2>
 
-      {statusMsg && <p>{statusMsg}</p>}
+      {statusMsg && <p role="status" className="font-moderustic text-n">{statusMsg}</p>}
 
       {/* Render PromoForm counterpart when editing a row */}
       {editingPromo && (
-        <fieldset style={{ marginBottom: '20px' }}>
+        <fieldset className="mb-5">
           <legend>Edit Promo Counterpart</legend>
           <PromoForm
             initialData={editingPromo}
@@ -99,7 +99,7 @@ export default function PromoTable() {
               setStatusMsg(`Promo ${editingPromo.id} updated successfully.`);
             }}
           />
-          <button type="button" onClick={handleCloseEdit} style={{ marginTop: '10px' }}>
+          <button type="button" className="pink mt-3" onClick={handleCloseEdit}>
             Cancel Edit
           </button>
         </fieldset>
@@ -109,34 +109,36 @@ export default function PromoTable() {
       {promos.length === 0 ? (
         <p>No promos found in the database.</p>
       ) : (
-        <table border="1" cellPadding="8" cellSpacing="0">
-          <thead>
+        <table className="w-full border-collapse text-left font-moderustic text-n">
+          <caption className="sr-only">Promotions</caption>
+          <thead className="bg-n text-w">
             <tr>
-              <th>ID</th>
-              <th>Promo Name</th>
-              <th>Target Tag</th>
-              <th>Discount Rate</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th>Actions</th>
+              <th scope="col" className="px-3 py-2 text-left">ID</th>
+              <th scope="col" className="px-3 py-2 text-left">Promo Name</th>
+              <th scope="col" className="px-3 py-2 text-left">Target Tag</th>
+              <th scope="col" className="px-3 py-2 text-left">Discount Rate</th>
+              <th scope="col" className="px-3 py-2 text-left">Start Date</th>
+              <th scope="col" className="px-3 py-2 text-left">End Date</th>
+              <th scope="col" className="px-3 py-2 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
             {promos.map((promo) => (
-              <tr key={promo.id}>
-                <td>{promo.id}</td>
-                <td>{promo.promo_name}</td>
-                <td>{getTagName(promo.tag_id)}</td>
-                <td>
+              <tr key={promo.id} className="border-b border-b/30">
+                <td className="px-3 py-2">{promo.id}</td>
+                <td className="px-3 py-2">{promo.promo_name}</td>
+                <td className="px-3 py-2">{getTagName(promo.tag_id)}</td>
+                <td className="px-3 py-2">
                   {promo.promo_price_decrease
                     ? `${(promo.promo_price_decrease * 100).toFixed(0)}% (${promo.promo_price_decrease})`
                     : 'N/A'}
                 </td>
-                <td>{promo.promo_date_start}</td>
-                <td>{promo.promo_date_end}</td>
-                <td>
+                <td className="px-3 py-2">{promo.promo_date_start}</td>
+                <td className="px-3 py-2">{promo.promo_date_end}</td>
+                <td className="space-x-2 px-3 py-2">
                   <button
                     type="button"
+                    className="blue"
                     onClick={() => handleEditClick(promo)}
                     disabled={loading}
                   >
@@ -144,6 +146,7 @@ export default function PromoTable() {
                   </button>
                   <button
                     type="button"
+                    className="pink"
                     onClick={() => handleDeleteClick(promo.id)}
                     disabled={loading}
                   >
@@ -155,6 +158,6 @@ export default function PromoTable() {
           </tbody>
         </table>
       )}
-    </div>
+    </section>
   );
 }

@@ -62,9 +62,9 @@ export default function TagForm({ initialData = null, onSuccess = null }) {
 
   return (
     <div>
-      <h2>{isEditMode ? `Edit Tag (${initialData.id})` : 'Add New Tag'}</h2>
+      <h2 className="text-n">{isEditMode ? `Edit Tag (${initialData.id})` : 'Add New Tag'}</h2>
 
-      {statusMsg && <p>{statusMsg}</p>}
+      {statusMsg && <p role="status" className="font-moderustic text-n">{statusMsg}</p>}
 
       <form onSubmit={handleSubmit}>
         <div>
@@ -79,7 +79,7 @@ export default function TagForm({ initialData = null, onSuccess = null }) {
           />
         </div>
 
-        <button type="submit" disabled={loading}>
+        <button type="submit" className="green" disabled={loading}>
           {loading ? 'Saving...' : isEditMode ? 'Update Tag' : 'Add Tag'}
         </button>
       </form>
