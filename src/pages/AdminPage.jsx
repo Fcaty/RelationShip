@@ -143,7 +143,6 @@ export default function AdminPage() {
           {activeTab === 'users' && <UserTable />}
         </section>
       </main>
-
     </div>
   );
 }
